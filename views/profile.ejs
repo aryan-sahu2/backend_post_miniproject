@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div
+      class="main min-h-screen text-white px-10 py-5 sm:p-10 w-full bg-[#121212]"
+    >
+      <div class="flex items-center gap-3 justify-end">
+        <a
+          class="inline-block border-[1px] px-5 py-1 border-blue-600 rounded-md text-zinc-300 hover:bg-blue-500 transition-all duration-300 hover:text-white mb-10 sm:mb-5 font-semibold"
+          href="/profile/upload"
+          >Upload Photo</a
+        >
+        <a
+          class="inline-block border-[1px] px-5 py-1 border-red-600 rounded-md text-zinc-300 hover:bg-red-500 transition-all duration-300 hover:text-white mb-10 sm:mb-5 font-semibold"
+          href="/logout"
+          >Logout</a
+        >
+      </div>
+      <div class="flex justify-center mb-4 items-center gap-5 mx-auto">
+        <div class="w-10 h-10 overflow-hidden rounded-full">
+            <img class="w-full h-full object-cover" src="/images/uploads/<%= user.profilepic %>" alt="">
+        </div>
+        <h1 class="text-2xl font-semibold text-center">
+          <span class="font-light">Hello</span>, <%= user.name %> 👋
+        </h1>
+      </div>
+      <h5 class="text-center">You can create a new post below</h5>
+      <form
+        class="w-full sm:w-[450px] items-center flex flex-col mx-auto my-10"
+        action="/post"
+        method="post"
+      >
+        <textarea
+          class="resize-none rounded-md bg-transparent border-[1px] px-3 py-2 border-zinc-800 outline-none w-full h-72 sm:h-32 mb-5"
+          rows="5"
+          placeholder="What's on your mind?"
+          name="content"
+          id=""
+        ></textarea>
+        <input
+          class="font-bold rounded-md px-6 py-1 bg-blue-500 hover:bg-purple-600 transition-all duration-300 w-fit"
+          type="submit"
+          value="Create New Post"
+        />
+      </form>
+      <% if (user.posts) { %>
+      <h3 class="font-semibold mb-5 text-2xl">Your Posts</h3>
+      <% } else { %>
+      <h3 class="font-semibold mb-5 text-2xl">No Posts Yet</h3>
+      <% } %>
+
+      <div class="posts flex gap-5 flex-wrap">
+        <% user.posts && user.posts.reverse().forEach((post)=>{ %>
+        <div
+          class="postContainer w-full sm:w-[32%] border-[1px] border-zinc-800 bg-zinc-900 px-5 py-3 rounded-md"
+        >
+          <h4 class="tracking-tight mb-2 text-blue-500 font-semibold">
+            @<%= user.username %>
+          </h4>
+          <p class="text-zinc-300 mb-2"><%= post.content %></p>
+          <div class="btns gap-3 flex items-center">
+            <small class="text-zinc-200"><%= post.likes.length %> Likes</small>
+            <a
+              class="text-blue-500 hover:text-blue-700"
+              href="/like/<%= post._id %>"
+              ><%= post.likes.indexOf(user._id) === -1 ? "Like" : "Unlike" %></a
+            >
+            <a
+              class="text-zinc-400 hover:text-blue-500"
+              href="/edit/<%= post._id %>"
+              >Edit</a
+            >
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </body>
+</html>
